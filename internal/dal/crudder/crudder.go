@@ -114,7 +114,7 @@ type Crudder struct {
 }
 
 // GenerateSetter generates a map[string]any for database update. This function accepts a database
-// model, a list of struct fields that can be updated and returns fields with not nil values
+// model, a list of struct fields that can be updated and returns fields with not nil value
 func GenerateSetter(object any, updateFields []string) map[string]any {
 	setter := make(map[string]any)
 
