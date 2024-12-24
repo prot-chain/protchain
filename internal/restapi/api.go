@@ -37,7 +37,7 @@ type API struct {
 // Serve starts the core service
 func (a *API) Serve() error {
 	a.Server = &http.Server{
-		Addr:           fmt.Sprintf(":%d", a.Config.Port),
+		Addr:           fmt.Sprintf(":%d", a.Config.HttpPort),
 		ReadTimeout:    15 * time.Second,
 		WriteTimeout:   40 * time.Second,
 		Handler:        a.setUpServerHandler(),
@@ -69,54 +69,7 @@ func (a *API) setUpServerHandler() http.Handler {
 		}))
 
 		r.Use(RequestTracing)
-
-		r.Mount("/mono", a.MonoRoutes())
-		r.Mount("/termii", a.TermiiRoutes())
-		r.Mount("/twilio", a.TwilioRoutes())
-		r.Mount("/lidya", a.LidyaRoutes())
-		r.Mount("/crc", a.CrcRoutes())
-		r.Mount("/cellulant", a.CellulantRoutes())
-		r.Mount("/filestack", a.FileStackRoutes())
-		r.Mount("/identitypass", a.IdentitpPassRoutes())
-		r.Mount("/paystack", a.PayStackRoutes())
-		r.Mount("/cyberpay", a.CyberPayRoutes())
-		r.Mount("/remita", a.RemitaRoutes())
-		r.Mount("/calendy", a.CalendyRoutes())
-		r.Mount("/mbs", a.MbsRoutes())
-		r.Mount("/okra", a.OkraRoutes())
-		r.Mount("/elastic", a.ElasticRoutes())
-		r.Mount("/blacklist", a.BlackListRoutes())
-		r.Mount("/flutterwave", a.FlutterwaveRoutes())
-		r.Mount("/whatsapp", a.WhatsAppRoutes())
-		r.Mount("/bitnob", a.BitnobRoutes())
-		r.Mount("/providus", a.ProvidusRoutes())
-		r.Mount("/graph", a.GraphCmsRoutes())
-		r.Mount("/providus_transfer", a.ProvidusTransferRoutes())
-		r.Mount("/stripe", a.StripeRoutes())
-		r.Mount("/periculum", a.PericulumRoutes())
-		r.Mount("/payment", a.PaymentRoutes())
-		r.Mount("/nlng", a.NLNGRoutes())
-		r.Mount("/iprocess", a.IprocessRoutes())
-		r.Mount("/rubicon", a.RubiconRoutes())
-		// go a.SmsConsumer()
 	})
 
-	mux.Route("/webhook", func(webhookRouter chi.Router) {
-		webhookRouter.Use(middleware.RealIP)
-		webhookRouter.Use(middleware.Logger)
-		webhookRouter.Use(middleware.Recoverer)
-		webhookRouter.Use(middleware.Timeout(60 * time.Second))
-		webhookRouter.Use(cors.Handler(cors.Options{
-			AllowedOrigins:   []string{"*"},
-			AllowedMethods:   []string{http.MethodPost, http.MethodGet, http.MethodPatch, http.MethodPut, http.MethodDelete},
-			AllowedHeaders:   []string{"Accept", "Authorization", "Content-For", value.HeaderRequestID, value.HeaderRequestSource},
-			AllowCredentials: true,
-			MaxAge:           300,
-		}))
-
-		webhookRouter.Use(RequestTracingII)
-
-		webhookRouter.Mount("/payment", a.PaymentWebHookRoutes())
-	})
 	return mux
 }

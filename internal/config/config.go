@@ -19,6 +19,7 @@ type Config struct {
 
 	// DatabaseUrl ...
 	DatabaseUrl string `env:"DATABASE_URL,required,notEmpty,unset"`
+	Environment string `env:"ENVIRONMENT" envDefault:"test"`
 
 	MaximumDBConn int `env:"MAX_DB_CONNECTION,required,notEmpty,unset" envDefault:"10"`
 }
