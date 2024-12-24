@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"protchain/internal/config"
 	"protchain/internal/dep"
@@ -44,6 +45,7 @@ func (a *API) Serve() error {
 		MaxHeaderBytes: 1024 * 1024,
 	}
 
+	slog.Info(fmt.Sprintf("Serving at port %d", a.Config.HttpPort))
 	return a.Server.ListenAndServe()
 }
 

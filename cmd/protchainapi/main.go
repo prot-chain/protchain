@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -10,6 +11,7 @@ import (
 	"protchain/internal/config"
 	"protchain/internal/dep"
 	"protchain/internal/logic"
+	"protchain/internal/restapi"
 	"syscall"
 	"time"
 )
@@ -23,15 +25,14 @@ func main() {
 	appDep := dep.New(appConfig)
 	_ = logic.New(appDep)
 
-	//restApi := rest.API{
-	//	Config: appConfig,
-	//	Dep:    appDep,
-	//	Logic:  appLogic,
-	//}
+	restApi := restapi.API{
+		Config: appConfig,
+		Deps:   appDep,
+	}
 
-	//go func() {
-	//	log.Fatal(restApi.Serve())
-	//}()
+	go func() {
+		log.Fatal(restApi.Serve())
+	}()
 
 	// graceful shutdown
 	stopChan := make(chan os.Signal, 1)

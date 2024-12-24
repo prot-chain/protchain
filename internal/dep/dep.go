@@ -3,6 +3,7 @@ package dep
 import (
 	"protchain/internal/config"
 	"protchain/internal/dal"
+	"protchain/internal/service/bioapi"
 	"sync"
 )
 
@@ -13,6 +14,7 @@ var (
 
 type Dependencies struct {
 	// Services
+	Bioapi *bioapi.Client
 
 	// DAL
 	DAL *dal.DAL
@@ -23,7 +25,8 @@ type Dependencies struct {
 func New(cfg *config.Config) *Dependencies {
 	once.Do(func() {
 		dep = &Dependencies{
-			DAL: dal.NewDAL(cfg),
+			Bioapi: bioapi.NewClient(cfg),
+			DAL:    dal.NewDAL(cfg),
 		}
 	})
 

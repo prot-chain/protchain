@@ -20,6 +20,7 @@ type Config struct {
 	// DatabaseUrl ...
 	DatabaseUrl string `env:"DATABASE_URL,required,notEmpty,unset"`
 	Environment string `env:"ENVIRONMENT" envDefault:"test"`
+	BioAPIUrl   string `env:"BIO_API_URL,required,notEmpty,unset"`
 
 	MaximumDBConn int `env:"MAX_DB_CONNECTION,required,notEmpty,unset" envDefault:"10"`
 }
