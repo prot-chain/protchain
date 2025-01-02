@@ -1,0 +1,8 @@
+{
+  "name": "benchmarks",
+  "version": "1.0.0",
+  "description": "benchmark test for protchain",
+  "main": "protein-workload.js",
+  "author": "isongjosiah",
+  "license": "MIT"
+}

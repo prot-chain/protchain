@@ -20,7 +20,7 @@ type ProteinMetadata struct {
 	// protein data
 	Hash      string `json:"protein_hash"`
 	ProteinID string `json:"protein_id"`
-	FileUrl   string `json:"file_Url"`
+	FileUrl   string `json:"file_url"`
 }
 
 func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
