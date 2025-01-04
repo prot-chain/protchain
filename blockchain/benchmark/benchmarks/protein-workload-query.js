@@ -37,13 +37,7 @@ class ProteinWorkload extends WorkloadModuleBase {
 
         // Get the stored data (assuming only the first entry is written)
         const firstEntry = proteinData;
-        //console.log(`Retrieved data from file:`);
-        //console.log(`Protein ID: ${firstEntry.proteinId}`);
-        //console.log(`File URL: ${firstEntry.fileURL}`);
-        //console.log(`Hash: ${firstEntry.hash}`);
         const proteinId = firstEntry.proteinId
-        //const randomFileURL = `https://example.com/protein_${this.txIndex}`;
-        //const randomHash = `hash_${this.txIndex}`;
 
         // Prepare a random transaction request
         const request = {
@@ -54,11 +48,6 @@ class ProteinWorkload extends WorkloadModuleBase {
             contractArguments: [ proteinId ],
             readOnly: false
         };
-
-        let x = 1;
-        if (x == 1) {
-          console.log("=========== "+proteinId+"==============")
-        }
 
         // Submit the transaction
         await this.sutAdapter.sendRequests(request);

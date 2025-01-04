@@ -206,6 +206,19 @@ test:
         module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-query.js"
       duration: 0
   
+monitors:
+  resource:
+  - module: docker
+    options:
+      interval: 5
+      containers:
+      - all
+    charting:
+      bar:
+        metrics: [Memory(avg), CPU%(avg)]
+      polar:
+        metrics: [all]
+
 caliper:
   blockchain: "fabric"
   sutOptions:
@@ -213,22 +226,6 @@ caliper:
     # We'll specify the identity we want to use:
     clientCredential: "Org1"
   # Generate an HTML report (also CSV or JSON if you prefer)
-  monitors:
-    resource:
-    - module: docker
-      options:
-        interval: 5
-        containers:
-          - peer0.org1.example.com
-          - peer0.org2.example.com
-          - orderer.example.com
-        charting:
-          bar:
-            metrics: [Memory(avg), CPU%(avg)]
-          polar:
-            metrics: [all]
-    transaction:
-    - module: logging
   report:
     type: "html"
     destination: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/report/"
