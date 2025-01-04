@@ -5,26 +5,207 @@ test:
     number: 2           # number of Caliper client processes
 
   rounds:
-    - label: "Open Loop TPS=100"
+    - label: "Store 100"
       txNumber: 1000    # total transactions to send
       rateControl:
         type: fixed-rate
         opts:
           tps: 100      # send 100 transactions per second
       workload:
-        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload.js"
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-store.js"
       duration: 0       # 0 = no time limit, rely on txNumber
 
-    - label: "Open Loop TPS=200"
+    - label: "Store 200"
+      txNumber: 1000
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 200
+      workload:
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-store.js"
+      duration: 0
+
+    - label: "Store 300"
+      txNumber: 1000
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 300
+      workload:
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-store.js"
+      duration: 0
+
+    - label: "Store 400"
+      txNumber: 1000
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 400
+      workload:
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-store.js"
+      duration: 0
+
+    - label: "Store 500"
+      txNumber: 1000
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 500
+      workload:
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-store.js"
+      duration: 0
+
+    - label: "Store(2) 100"
+      txNumber: 2000    # total transactions to send
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 100      # send 100 transactions per second
+      workload:
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-store.js"
+      duration: 0       # 0 = no time limit, rely on txNumber
+
+    - label: "Store(2) 200"
       txNumber: 2000
       rateControl:
         type: fixed-rate
         opts:
           tps: 200
       workload:
-        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload.js"
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-store.js"
       duration: 0
 
+    - label: "Store(2) 300"
+      txNumber: 2000
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 300
+      workload:
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-store.js"
+      duration: 0
+
+    - label: "Store(2) 400"
+      txNumber: 2000
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 400
+      workload:
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-store.js"
+      duration: 0
+
+    - label: "Store(2) 500"
+      txNumber: 2000
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 500
+      workload:
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-store.js"
+      duration: 0
+
+
+    - label: "Query 100"
+      txNumber: 1000    # total transactions to send
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 100      # send 100 transactions per second
+      workload:
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-query.js"
+      duration: 0       # 0 = no time limit, rely on txNumber
+
+    - label: "Query 200"
+      txNumber: 1000
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 200
+      workload:
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-query.js"
+      duration: 0
+
+    - label: "Query 300"
+      txNumber: 1000
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 300
+      workload:
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-query.js"
+      duration: 0
+
+    - label: "Query 400"
+      txNumber: 1000
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 400
+      workload:
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-query.js"
+      duration: 0
+
+    - label: "Query 500"
+      txNumber: 1000
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 500
+      workload:
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-query.js"
+      duration: 0
+
+    - label: "Query(2) 100"
+      txNumber: 2000    # total transactions to send
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 100      # send 100 transactions per second
+      workload:
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-query.js"
+      duration: 0       # 0 = no time limit, rely on txNumber
+
+    - label: "Query(2) 200"
+      txNumber: 2000
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 200
+      workload:
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-query.js"
+      duration: 0
+
+    - label: "Query(2) 300"
+      txNumber: 2000
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 300
+      workload:
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-query.js"
+      duration: 0
+
+    - label: "Query(2) 400"
+      txNumber: 2000
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 400
+      workload:
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-query.js"
+      duration: 0
+
+    - label: "Query(2) 500"
+      txNumber: 2000
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 500
+      workload:
+        module: "/Users/konig/go/src/github.com/isongjosiah/hack/protchain-project/protchain/blockchain/benchmark/benchmarks/protein-workload-query.js"
+      duration: 0
+  
 caliper:
   blockchain: "fabric"
   sutOptions:
