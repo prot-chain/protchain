@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # BioAPI Service
+  bioapi:
+    image: isongjosiah/protchain/bioapi:latest
+    container_name: bioapi
+    ports:
+      - "8000:8000"
+    environment:
+      - BIOAPI_ENV=local
+    depends_on:
+      - blockchain
+    networks:
+      - protchain-network
+
+  # Protchain API
+  protchain-api:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: protchain-api
+    ports:
+      - "8080:8080"
+    environment:
+      - API_ENV=local
+      - BLOCKCHAIN_URL=grpc://peer0.org1.example.com:7051
+      - BIOAPI_URL=http://bioapi:8000
+    depends_on:
+      - bioapi
+      - blockchain
+    networks:
+      - protchain-network
+
+  # Blockchain Network
+  blockchain:
+    container_name: blockchain
+    image: hyperledger/fabric-peer:latest
+    command: peer node start
+    environment:
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_PEER_ID=peer0.org1.example.com
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+      - CORE_PEER_TLS_ENABLED=true
+    volumes:
+      - ./crypto-config:/crypto-config
+      - ./channel-artifacts:/channel-artifacts
+    ports:
+      - "7051:7051"
+      - "7053:7053"
+    networks:
+      - protchain-network
+
+networks:
+  protchain-network:
+    driver: bridge
