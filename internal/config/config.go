@@ -22,6 +22,15 @@ type Config struct {
 	Environment string `env:"ENVIRONMENT" envDefault:"test"`
 	BioAPIUrl   string `env:"BIO_API_URL,required,notEmpty,unset"`
 
+	JwtKey      string `env:"JWT_KEY,required,notEmpty,unset"`
+	IPFSAddress string `env:"IPFS_ADDRESS,required,notEmpty,unset"`
+
+	ChainCode    string `env:"CHAIN_CODE,required,notEmpty,unset"`
+	Channel      string `env:"CHANNEL,required,notEmpty,unset"`
+	PeerEndpoint string `env:"PEER_ENDPOINT,required,notEmpty,unset"`
+	MSPID        string `env:"MSPID,required,notEmpty,unset"`
+	CryptoPath   string `env:"CRYPTO_PATH,notEmpty,unset"`
+
 	MaximumDBConn int `env:"MAX_DB_CONNECTION,required,notEmpty,unset" envDefault:"10"`
 }
 
