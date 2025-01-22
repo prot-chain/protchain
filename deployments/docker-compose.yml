@@ -3,25 +3,21 @@ version: '3.8'
 services:
   # BioAPI Service
   bioapi:
-    image: isongjosiah/protchain/bioapi:latest
+    image: isongjosiah/protchain:bioapi
     container_name: bioapi
     ports:
       - "8000:8000"
     environment:
       - BIOAPI_ENV=local
-    depends_on:
-      - blockchain
     networks:
       - protchain-network
 
   # Protchain API
   protchain-api:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    image: isongjosiah/protchain:protchain-api
     container_name: protchain-api
     ports:
-      - "8080:8080"
+      - "8001:8001"
     environment:
       - API_ENV=local
       - BLOCKCHAIN_URL=grpc://peer0.org1.example.com:7051
