@@ -4,7 +4,8 @@ set -e
 
 # Define directories
 GOPATH=$(go env GOPATH)
-FABRIC_SCRIPT="./fabric/install-fabric.sh"
+FABRIC_DIR="./fabric"
+FABRIC_SCRIPT="./install-fabric.sh"
 IPFS_CONTAINER_NAME="ipfs-kubo"
 
 # Check prerequisites
@@ -15,10 +16,11 @@ fi
 
 # Step 1: Install binaries and Docker Images
 echo "Installing Hyperledger Fabric binaries and Docker images..."
-$FABRIC_SCRIPT d b
+cd $FABRIC_DIR
+$FABRIC_SCRIPT d
 
 # Step 2: Set up the test network
-cd "$FABRIC_SAMPLES_DIR/test-network"
+cd "fabric-samples/test-network"
 echo "Setting up Fabric Test Network..."
 ./network.sh down
 ./network.sh up createChannel -ca
