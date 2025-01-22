@@ -1,11 +1,11 @@
 #!/bin/bash
 
+NETWORK_SCRIPT="./fabric/fabric-samples/test-network/network.sh"
+FABRIC_SCRIPT="./fabric/install-fabric.sh"
+
 set -e
 
 # Define directories
-GOPATH=$(go env GOPATH)
-FABRIC_DIR="./fabric"
-FABRIC_SCRIPT="./install-fabric.sh"
 IPFS_CONTAINER_NAME="ipfs-kubo"
 
 # Check prerequisites
@@ -15,18 +15,17 @@ if ! command -v docker &>/dev/null || ! command -v docker-compose &>/dev/null ||
 fi
 
 # Step 1: Install binaries and Docker Images
-echo "Installing Hyperledger Fabric binaries and Docker images..."
-cd $FABRIC_DIR
+echo "Installing Hyperledger Fabric Docker images..."
+chmod +x $NETWORK_SCRIPT
 $FABRIC_SCRIPT d
 
 # Step 2: Set up the test network
-cd "fabric-samples/test-network"
 echo "Setting up Fabric Test Network..."
-./network.sh down
-./network.sh up createChannel -ca
+$NETWORK_SCRIPT down
+$NETWORK_SCRIPT up createChannel -ca
 
 # Step 3: Start the chaincode container
-./network.sh deployCC -ccn basic -ccp ../blockchain/chaincode/proteomic -ccl go
+$NETWORK_SCRIPT deployCC -ccn proteomic -ccp ../../../../blockchain/chaincode/proteomic -ccl go
 
 # Step 4: Set up IPFS with Kubo
 if [ ! "$(docker ps -q -f name=$IPFS_CONTAINER_NAME)" ]; then
@@ -41,12 +40,11 @@ else
 fi
 
 # Step 5: Run Microservices with Docker Compose
-
 if [ -f "./docker-compose.yml" ]; then
   docker-compose up -d
   echo "Microservices are running."
 else
-  echo "docker-compose.yml not found in $MICROSERVICES_DIR"
+  echo "docker-compose.yml not found in ${PWD}"
   exit 1
 fi
 
