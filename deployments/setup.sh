@@ -1,7 +1,7 @@
 #!/bin/bash
 
-NETWORK_SCRIPT="./fabric/fabric-samples/test-network/network.sh"
-FABRIC_SCRIPT="./fabric/install-fabric.sh"
+NETWORK_SCRIPT="./fabric_setup/test-network/network.sh"
+FABRIC_SCRIPT="./fabric_setup/install-fabric.sh"
 
 set -e
 
@@ -17,6 +17,7 @@ fi
 # Step 1: Install binaries and Docker Images
 echo "Installing Hyperledger Fabric Docker images..."
 chmod +x $NETWORK_SCRIPT
+chmod +x $FABRIC_SCRIPT
 $FABRIC_SCRIPT d
 
 # Step 2: Set up the test network
@@ -25,7 +26,7 @@ $NETWORK_SCRIPT down
 $NETWORK_SCRIPT up createChannel -ca
 
 # Step 3: Start the chaincode container
-$NETWORK_SCRIPT deployCC -ccn proteomic -ccp ../../../../blockchain/chaincode/proteomic -ccl go
+$NETWORK_SCRIPT deployCC -ccn proteomic -ccp ../blockchain/chaincode/proteomic -ccl go
 
 # Step 4: Set up IPFS with Kubo
 if [ ! "$(docker ps -q -f name=$IPFS_CONTAINER_NAME)" ]; then
