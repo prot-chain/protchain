@@ -27,6 +27,21 @@ services:
     networks:
       - protchain-network
 
+  # PostgreSQL Service
+  postgresql:
+    image: postgres:15
+    container_name: postgresql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: protchain
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - protchain-network
+
 networks:
   protchain-network:
     driver: bridge
