@@ -1,5 +1,6 @@
 #!/bin/bash
 
+NETWORK_DIR="./fabric_setup/test-network/"
 NETWORK_SCRIPT="./fabric_setup/test-network/network.sh"
 FABRIC_SCRIPT="./fabric_setup/install-fabric.sh"
 
@@ -26,7 +27,8 @@ $NETWORK_SCRIPT down
 $NETWORK_SCRIPT up createChannel -ca
 
 # Step 3: Start the chaincode container
-$NETWORK_SCRIPT deployCC -ccn proteomic -ccp ../blockchain/chaincode/proteomic -ccl go
+cd $NETWORK_DIR
+./network.sh deployCC -ccn proteomic -ccp ../../../blockchain/chaincode/proteomic -ccl go
 
 # Step 4: Set up IPFS with Kubo
 if [ ! "$(docker ps -q -f name=$IPFS_CONTAINER_NAME)" ]; then
@@ -41,6 +43,7 @@ else
 fi
 
 # Step 5: Run Microservices with Docker Compose
+cd ../..
 if [ -f "./docker-compose.yml" ]; then
   docker-compose up -d
   echo "Microservices are running."
