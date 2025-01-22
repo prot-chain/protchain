@@ -28,7 +28,6 @@ services:
       - BIOAPI_URL=http://bioapi:8000
     depends_on:
       - bioapi
-      - blockchain
     networks:
       - protchain-network
 
