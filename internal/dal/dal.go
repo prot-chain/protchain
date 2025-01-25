@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"protchain/internal/config"
+	"protchain/internal/dal/model"
 	"sync"
 	"time"
 
@@ -36,7 +37,9 @@ func connectSQLDAL(config *config.Config) *bun.DB {
 }
 
 func CreateTables(Conn *bun.DB) error {
-	models := []interface{}{}
+	models := []interface{}{
+		&model.User{},
+	}
 
 	var wg sync.WaitGroup
 	for _, model := range models {
@@ -49,7 +52,7 @@ func CreateTables(Conn *bun.DB) error {
 				IfNotExists().
 				Model(m).Exec(context.Background())
 			if err != nil {
-				fmt.Println(err)
+				fmt.Println("failed to create table -> ", err)
 				return
 			}
 		}(model)

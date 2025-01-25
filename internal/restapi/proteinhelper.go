@@ -25,8 +25,16 @@ func (a *API) RetrieveProteinDetail(req schema.GetProteinReq) (schema.Protein, e
 	}
 
 	if bcRes != "" {
-		print("data stored on blockchain already -> ", bcRes)
-		return schema.Protein{}, nil
+		var payload schema.Protein
+		var data map[string]string
+		if err := function.Load(bcRes, &data); err != nil {
+			return schema.Protein{}, errors.Wrap(err, "Failed to load metadata from blockckain")
+		}
+		payload.FileHash = data["protein_hash"]
+		payload.PrimaryAccession = data["protein_id"]
+		payload.IPFSCid = data["file_Url"]
+
+		return payload, nil
 	}
 
 	resp, err := http.Get(res.Data.PDBLink)

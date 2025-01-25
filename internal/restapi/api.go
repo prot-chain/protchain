@@ -61,16 +61,22 @@ func (a *API) setUpServerHandler() http.Handler {
 	mux.Use(middleware.Recoverer)
 	mux.Use(middleware.Timeout(60 * time.Second))
 	mux.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowedMethods:   []string{http.MethodPost, http.MethodGet, http.MethodPatch, http.MethodPut, http.MethodDelete},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-For", value.HeaderRequestID, value.HeaderRequestSource},
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{
+			http.MethodPost, http.MethodGet, http.MethodPatch, http.MethodPut, http.MethodDelete, http.MethodOptions,
+		},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", value.HeaderRequestID, value.HeaderRequestSource},
 		AllowCredentials: true,
 		MaxAge:           300,
 	}))
-
-	mux.Use(RequestTracing)
-	mux.Mount("/auth", a.AuthRoutes())
-	mux.Mount("/protein", a.ProteinRoutes())
+	mux.Options("/*", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Authorization, Content-Type, X-CSRF-Token")
+		w.WriteHeader(http.StatusNoContent)
+	})
+	mux.Mount("/auth", a.AuthRoutes(mux))
+	mux.Mount("/protein", a.ProteinRoutes(mux))
 
 	return mux
 }

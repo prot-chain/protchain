@@ -47,6 +47,7 @@ func respondWithError(err error, message, status string, tracingContext *tracing
 
 func writeJSONResponse(w http.ResponseWriter, content []byte, statusCode int) {
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(statusCode)
 	if _, err := w.Write(content); err != nil {
 		logging.Log.Error("unable to write json response")

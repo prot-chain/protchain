@@ -2,6 +2,7 @@ package restapi
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"protchain/internal/schema"
 	"protchain/internal/value"
@@ -9,14 +10,12 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func (a *API) AuthRoutes() http.Handler {
-	router := chi.NewRouter()
+func (a *API) AuthRoutes(r *chi.Mux) http.Handler {
+	r.Method(http.MethodPost, "/register", Handler(a.RegisterH))
+	r.Method(http.MethodPost, "/login", Handler(a.LoginH))
+	r.Method(http.MethodPost, "/google-oauth", Handler(a.GoogleOAuthH))
 
-	router.Method(http.MethodPost, "/register", Handler(a.RegisterH))
-	router.Method(http.MethodPost, "/login", Handler(a.LoginH))
-	router.Method(http.MethodPost, "/google-oauth", Handler(a.GoogleOAuthH))
-
-	return router
+	return r
 }
 
 func (a *API) RegisterH(w http.ResponseWriter, r *http.Request) *ServerResponse {
@@ -25,6 +24,7 @@ func (a *API) RegisterH(w http.ResponseWriter, r *http.Request) *ServerResponse 
 	if err := json.NewDecoder(r.Body).Decode(&reqPayload); err != nil {
 		return respondWithError(err, "bad request body", value.BadRequest, nil)
 	}
+	fmt.Println("payload is -> ", reqPayload)
 
 	res, err := a.RegisterUser(reqPayload)
 	if err != nil {
