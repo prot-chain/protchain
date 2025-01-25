@@ -10,6 +10,7 @@ import (
 	// "protchain/internal/api/rest"
 	"protchain/internal/config"
 	"protchain/internal/dep"
+	"protchain/internal/logging"
 	"protchain/internal/logic"
 	"protchain/internal/restapi"
 	"syscall"
@@ -30,6 +31,7 @@ func main() {
 		Deps:   appDep,
 	}
 
+	logging.New(appConfig)
 	go func() {
 		log.Fatal(restApi.Serve())
 	}()

@@ -45,7 +45,7 @@ fi
 # Step 5: Run Microservices with Docker Compose
 cd ../..
 if [ -f "./docker-compose.yml" ]; then
-  docker-compose up -d
+  docker-compose pull && docker-compose up -d
   echo "Microservices are running."
 else
   echo "docker-compose.yml not found in ${PWD}"

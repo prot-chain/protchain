@@ -13,6 +13,53 @@ type SmartContract struct {
 	contractapi.Contract
 }
 
+type Protein struct {
+	PrimaryAccession     string               `json:"primary_accession"`
+	RecommendedName      string               `json:"recommended_name"`
+	Organism             Organism             `json:"organism"`
+	EntryAudit           EntryAudit           `json:"entry_audit"`
+	Functions            []string             `json:"functions"`
+	SubunitStructure     []string             `json:"subunit_structure"`
+	SubcellularLocations []string             `json:"subcellular_locations"`
+	DiseaseAssociations  []DiseaseAssociation `json:"disease_associations"`
+	Isoforms             []Isoform            `json:"isoforms"`
+	Features             []Feature            `json:"features"`
+	PDBIDs               []string             `json:"pdb_ids"`
+	PDBLink              string               `json:"pdb_link"`
+	Sequence             string               `json:"sequence"`
+	FileHash             string               `json:"file_hash"`
+	IPFSCid              string               `json:"ipfs_cid"`
+}
+
+type Organism struct {
+	ScientificName string `json:"scientific_name"`
+	CommonName     string `json:"common_name"`
+}
+
+type EntryAudit struct {
+	FirstPublicDate          string `json:"first_public_date"`
+	LastAnnotationUpdateDate string `json:"last_annotation_update_date"`
+	SequenceVersion          int    `json:"sequence_version"`
+	EntryVersion             int    `json:"entry_version"`
+}
+
+type DiseaseAssociation struct {
+	DiseaseName    string `json:"disease_name"`
+	Acronym        string `json:"acronym"`
+	CrossReference string `json:"cross_reference"`
+}
+
+type Isoform struct {
+	IsoformName    string `json:"isoform_name"`
+	SequenceStatus string `json:"sequence_status"`
+}
+
+type Feature struct {
+	Type        string `json:"type"`
+	Location    string `json:"location"`
+	Description string `json:"description"`
+}
+
 // ProteinMetadata refers to the metadata
 // persisted to the blockchain for a protein
 type ProteinMetadata struct {
@@ -20,7 +67,7 @@ type ProteinMetadata struct {
 	// protein data
 	Hash      string `json:"protein_hash"`
 	ProteinID string `json:"protein_id"`
-	FileUrl   string `json:"file_url"`
+	FileUrl   string `json:"file_Url"`
 }
 
 func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
@@ -59,6 +106,14 @@ func (s *SmartContract) StoreMetadata(ctx contractapi.TransactionContextInterfac
 }
 
 func (s *SmartContract) QueryMetadata(ctx contractapi.TransactionContextInterface, proteinId string) (*ProteinMetadata, error) {
+	exists, err := s.MetadataExists(ctx, proteinId)
+	if err != nil {
+		return nil, err
+	}
+	if !exists {
+		return nil, nil
+	}
+
 	metadataBytes, err := ctx.GetStub().GetState(proteinId)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get state: %v", err)

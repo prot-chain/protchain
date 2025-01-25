@@ -37,8 +37,10 @@ func NewFabricClient(cfg *config.Config) *FabricClient {
 		MspID:        cfg.MSPID,
 		CryptoPath:   cfg.CryptoPath,
 		TlsCertPath:  path.Join(cfg.CryptoPath, "peers/peer0.org1.example.com/tls/ca.crt"),
-		CertPath:     path.Join(cfg.CryptoPath, "users/User1@org1.example.com/msp/signcerts"),
-		KeyPath:      path.Join(cfg.CryptoPath, "users/User1@org1.example.com/msp/keystore"),
+		CertPath:     path.Join(cfg.CryptoPath, "users/User1@org1.example.com/msp/signcerts/cert.pem"),
+		KeyPath: path.Join(
+			cfg.CryptoPath,
+			"users/User1@org1.example.com/msp/keystore/83a8de790c8a3ddd44780f6bffacc3d0fd86b03159d1a0ffe7974e64ebc99179_sk"),
 	}
 
 	grpcConn, err := fabricClient.newGrpcConnection()
@@ -82,7 +84,7 @@ func (fc *FabricClient) newGrpcConnection() (*grpc.ClientConn, error) {
 
 	certPool := x509.NewCertPool()
 	certPool.AppendCertsFromPEM(certificatePEM)
-	transportCredentials := credentials.NewClientTLSFromCert(certPool, fc.PeerEndpoint)
+	transportCredentials := credentials.NewClientTLSFromCert(certPool, "")
 
 	connection, err := grpc.Dial(fc.PeerEndpoint, grpc.WithTransportCredentials(transportCredentials))
 	if err != nil {

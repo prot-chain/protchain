@@ -29,9 +29,10 @@ type Dependencies struct {
 func New(cfg *config.Config) *Dependencies {
 	once.Do(func() {
 		dep = &Dependencies{
-			Bioapi: bioapi.NewClient(cfg),
-			IPFS:   storage.NewIPFSStorage(cfg),
-			DAL:    dal.NewDAL(cfg),
+			Bioapi:       bioapi.NewClient(cfg),
+			IPFS:         storage.NewIPFSStorage(cfg),
+			DAL:          dal.NewDAL(cfg),
+			FabricClient: gateway.NewFabricClient(cfg),
 		}
 	})
 

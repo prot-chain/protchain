@@ -13,6 +13,8 @@ func StatusCode(status string) int {
 		return http.StatusNotFound
 	case value.Created:
 		return http.StatusCreated
+	case value.BadRequest:
+		return http.StatusBadRequest
 	default:
 		return http.StatusInternalServerError
 	}

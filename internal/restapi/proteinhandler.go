@@ -14,7 +14,7 @@ import (
 func (a *API) ProteinRoutes() http.Handler {
 	router := chi.NewRouter()
 
-	router.Method(http.MethodGet, "/retrieve-protein", Handler(a.GetProteinH))
+	router.Method(http.MethodGet, "/", Handler(a.GetProteinH))
 
 	return router
 }
@@ -27,7 +27,7 @@ func (a *API) GetProteinH(w http.ResponseWriter, r *http.Request) *ServerRespons
 		return respondWithError(err, "bad request body", value.BadRequest, &tc)
 	}
 
-	res, err := a.Deps.Bioapi.RetrieveProtein(reqPayload)
+	res, err := a.RetrieveProteinDetail(reqPayload)
 	if err != nil {
 		return respondWithError(err, "failed to retrieve protein. Please try again", value.Error, &tc)
 	}

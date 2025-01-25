@@ -56,22 +56,21 @@ func (a *API) Shutdown() error {
 // setUpServerHandler sets up handlers for the service
 func (a *API) setUpServerHandler() http.Handler {
 	mux := chi.NewRouter()
+	mux.Use(middleware.RealIP)
+	mux.Use(middleware.Logger)
+	mux.Use(middleware.Recoverer)
+	mux.Use(middleware.Timeout(60 * time.Second))
+	mux.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{http.MethodPost, http.MethodGet, http.MethodPatch, http.MethodPut, http.MethodDelete},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-For", value.HeaderRequestID, value.HeaderRequestSource},
+		AllowCredentials: true,
+		MaxAge:           300,
+	}))
 
-	mux.Route("/", func(r chi.Router) {
-		r.Use(middleware.RealIP)
-		r.Use(middleware.Logger)
-		r.Use(middleware.Recoverer)
-		r.Use(middleware.Timeout(60 * time.Second))
-		r.Use(cors.Handler(cors.Options{
-			AllowedOrigins:   []string{"*"},
-			AllowedMethods:   []string{http.MethodPost, http.MethodGet, http.MethodPatch, http.MethodPut, http.MethodDelete},
-			AllowedHeaders:   []string{"Accept", "Authorization", "Content-For", value.HeaderRequestID, value.HeaderRequestSource},
-			AllowCredentials: true,
-			MaxAge:           300,
-		}))
-
-		r.Use(RequestTracing)
-	})
+	mux.Use(RequestTracing)
+	mux.Mount("/auth", a.AuthRoutes())
+	mux.Mount("/protein", a.ProteinRoutes())
 
 	return mux
 }

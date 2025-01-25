@@ -30,9 +30,13 @@ type Protein struct {
 func (p *Protein) GenerateContractArgs(functionName string) []string {
 	switch functionName {
 	case "StoreMetadata":
+		return []string{p.FileHash, p.PrimaryAccession, p.IPFSCid}
 	case "QueryMetadata":
+		return []string{p.PDBIDs[0]}
 	case "UpdateMetadata":
+		return []string{p.FileHash, p.PrimaryAccession, p.IPFSCid}
 	case "MetadataExists":
+		return []string{p.PDBIDs[0]}
 	}
 	return []string{}
 }

@@ -17,7 +17,18 @@ func (a *API) RetrieveProteinDetail(req schema.GetProteinReq) (schema.Protein, e
 		return schema.Protein{}, err
 	}
 
-	// retrieve PDB file
+	// retrieve PDB file.
+	// Check if the file already exists in the blockchain
+	bcRes, err := a.Deps.FabricClient.EvaluateTransaction("QueryMetadata", req.Code)
+	if err != nil {
+		return schema.Protein{}, fmt.Errorf("failed to retrieve PDB file from %s: %w", res.Data.PDBLink, err)
+	}
+
+	if bcRes != "" {
+		print("data stored on blockchain already -> ", bcRes)
+		return schema.Protein{}, nil
+	}
+
 	resp, err := http.Get(res.Data.PDBLink)
 	if err != nil {
 		return schema.Protein{}, fmt.Errorf("failed to retrieve PDB file from %s: %w", res.Data.PDBLink, err)
@@ -39,6 +50,7 @@ func (a *API) RetrieveProteinDetail(req schema.GetProteinReq) (schema.Protein, e
 		return schema.Protein{}, fmt.Errorf("failed to upload PDB file to IPFS: %w", err)
 	}
 	res.Data.IPFSCid = cid
+	fmt.Println(res.Data)
 
 	result, err := a.Deps.FabricClient.SubmitTransaction("StoreMetadata", res.Data.GenerateContractArgs("StoreMetadata")...)
 	if err != nil {

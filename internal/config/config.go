@@ -25,7 +25,9 @@ type Config struct {
 	JwtKey      string `env:"JWT_KEY,required,notEmpty,unset"`
 	IPFSAddress string `env:"IPFS_ADDRESS,required,notEmpty,unset"`
 
-	ChainCode    string `env:"CHAIN_CODE,required,notEmpty,unset"`
+	// ChainCode is the name of the smart contract - proteomic
+	ChainCode string `env:"CHAIN_CODE,required,notEmpty,unset"`
+	// Channel is the channel name
 	Channel      string `env:"CHANNEL,required,notEmpty,unset"`
 	PeerEndpoint string `env:"PEER_ENDPOINT,required,notEmpty,unset"`
 	MSPID        string `env:"MSPID,required,notEmpty,unset"`

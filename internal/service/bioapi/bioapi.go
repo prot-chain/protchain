@@ -21,7 +21,7 @@ func NewClient(config *config.Config) *Client {
 }
 
 func (c *Client) RetrieveProtein(payload schema.GetProteinReq) (schema.ProteinData, error) {
-	endpoint := fmt.Sprintf("%s/pdb/protein/%s", c.BaseUrl, payload.Code)
+	endpoint := fmt.Sprintf("%s/protein/%s", c.BaseUrl, payload.Code)
 
 	req, err := http.NewRequest(http.MethodGet, endpoint, nil)
 	if err != nil {
@@ -36,6 +36,10 @@ func (c *Client) RetrieveProtein(payload schema.GetProteinReq) (schema.ProteinDa
 	var response schema.ProteinData
 	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
 		return response, errors.Wrap(err, "failed to parse response from bioapi")
+	}
+
+	if res.StatusCode != http.StatusOK {
+		return response, fmt.Errorf("retrieval request failed with status code %s", res.StatusCode)
 	}
 
 	return response, nil
