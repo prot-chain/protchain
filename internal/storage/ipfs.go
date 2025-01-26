@@ -43,7 +43,11 @@ func (s *IPFSStorage) Upload(fileName string, fileData []byte) (string, error) {
 }
 
 func (s *IPFSStorage) Download(fileName string) (io.ReadCloser, error) {
-	filePath, _ := path.NewPath(fileName)
+	filePath, err := path.NewPath(fileName)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(filePath)
 	node, err := s.client.Unixfs().Get(context.Background(), filePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to download file from IPFS: %w", err)

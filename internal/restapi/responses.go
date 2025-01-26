@@ -3,6 +3,8 @@ package restapi
 import (
 	"context"
 	"encoding/json"
+	"io"
+	"mime/multipart"
 	"net/http"
 	"protchain/internal/logging"
 	"protchain/internal/tracing"
@@ -17,6 +19,9 @@ type ServerResponse struct {
 	StatusCode int             `json:"status_code"`
 	Context    context.Context `json:"context"`
 	Payload    interface{}     `json:"payload"`
+	File       io.Reader       `json:"-"`
+	FileName   string          `json:"-"`
+	FileType   string          `json:"-"`
 }
 
 func respondWithJSONPayload(ctx *tracing.Context, data interface{}, status, message string) *ServerResponse {
@@ -52,6 +57,38 @@ func writeJSONResponse(w http.ResponseWriter, content []byte, statusCode int) {
 	if _, err := w.Write(content); err != nil {
 		logging.Log.Error("unable to write json response")
 	}
+}
+
+// writeMultipartResponse writes a multipart response to the client
+func writeMultipartResponse(w http.ResponseWriter, jsonData []byte, file io.Reader, fileName string, fileType string) error {
+	mw := multipart.NewWriter(w)
+	defer mw.Close()
+
+	// Set the Content-Type header
+	w.Header().Set("Content-Type", mw.FormDataContentType())
+
+	// Write JSON part
+	jsonPart, err := mw.CreatePart(map[string][]string{"Content-Type": {"application/json"}})
+	if err != nil {
+		return err
+	}
+	if _, err := jsonPart.Write(jsonData); err != nil {
+		return err
+	}
+
+	// Write file part
+	filePart, err := mw.CreatePart(map[string][]string{
+		"Content-Disposition": {`attachment; filename="` + fileName + `"`},
+		"Content-Type":        {fileType},
+	})
+	if err != nil {
+		return err
+	}
+	if _, err := io.Copy(filePart, file); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // writeErrorResponse writes an error response to the client

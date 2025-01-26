@@ -1,5 +1,7 @@
 package schema
 
+import "io"
+
 type GetProteinReq struct {
 	Code string `json:"code"`
 }
@@ -25,6 +27,7 @@ type Protein struct {
 	Sequence             string               `json:"sequence"`
 	FileHash             string               `json:"file_hash"`
 	IPFSCid              string               `json:"ipfs_cid"`
+	File                 io.Reader            `json:"-"`
 }
 
 func (p *Protein) GenerateContractArgs(functionName string) []string {

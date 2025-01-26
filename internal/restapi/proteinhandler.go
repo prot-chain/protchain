@@ -32,5 +32,8 @@ func (a *API) GetProteinH(w http.ResponseWriter, r *http.Request) *ServerRespons
 		Status:     value.Success,
 		StatusCode: http.StatusOK,
 		Payload:    res,
+		File:       res.File,
+		FileName:   res.PrimaryAccession,
+		FileType:   "chemical/x-pdb",
 	}
 }

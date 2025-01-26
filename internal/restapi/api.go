@@ -26,6 +26,9 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		writeErrorResponse(w, err, value.Error, "unable to marshal server response")
 		return
 	}
+	if response.File != nil {
+		writeMultipartResponse(w, responseByte, response.File, response.FileName, response.FileType)
+	}
 	writeJSONResponse(w, responseByte, response.StatusCode)
 }
 
