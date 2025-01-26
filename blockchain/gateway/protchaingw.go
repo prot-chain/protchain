@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"path/filepath"
 	"protchain/internal/config"
 	"time"
 
@@ -30,6 +31,15 @@ type FabricClient struct {
 }
 
 func NewFabricClient(cfg *config.Config) *FabricClient {
+	// retrieve key path, as this is generated on network startup
+	kp := path.Join(cfg.CryptoPath, "users/User1@org1.example.com/msp/keystore/")
+	kp, err := findPrivateKey(kp)
+	fmt.Println("keystore is", kp)
+	fmt.Println("end key store")
+	if err != nil {
+		log.Fatalf("failed to discover secret key -> ", err.Error())
+	}
+
 	fabricClient := &FabricClient{
 		Chaincode:    cfg.ChainCode,
 		Channel:      cfg.Channel,
@@ -38,9 +48,7 @@ func NewFabricClient(cfg *config.Config) *FabricClient {
 		CryptoPath:   cfg.CryptoPath,
 		TlsCertPath:  path.Join(cfg.CryptoPath, "peers/peer0.org1.example.com/tls/ca.crt"),
 		CertPath:     path.Join(cfg.CryptoPath, "users/User1@org1.example.com/msp/signcerts/cert.pem"),
-		KeyPath: path.Join(
-			cfg.CryptoPath,
-			"users/User1@org1.example.com/msp/keystore/83a8de790c8a3ddd44780f6bffacc3d0fd86b03159d1a0ffe7974e64ebc99179_sk"),
+		KeyPath:      kp,
 	}
 
 	grpcConn, err := fabricClient.newGrpcConnection()
@@ -74,6 +82,14 @@ func NewFabricClient(cfg *config.Config) *FabricClient {
 	fabricClient.Contract = contract
 
 	return fabricClient
+}
+
+func findPrivateKey(path string) (string, error) {
+	files, err := filepath.Glob(filepath.Join(path, "*_sk"))
+	if err != nil || len(files) == 0 {
+		return "", fmt.Errorf("private key not found in %s", path)
+	}
+	return files[0], nil
 }
 
 func (fc *FabricClient) newGrpcConnection() (*grpc.ClientConn, error) {
