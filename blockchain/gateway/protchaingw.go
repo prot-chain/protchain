@@ -47,7 +47,7 @@ func NewFabricClient(cfg *config.Config) *FabricClient {
 		MspID:        cfg.MSPID,
 		CryptoPath:   cfg.CryptoPath,
 		TlsCertPath:  path.Join(cfg.CryptoPath, "peers/peer0.org1.example.com/tls/ca.crt"),
-		CertPath:     path.Join(cfg.CryptoPath, "users/User1@org1.example.com/msp/signcerts/cert.pem"),
+		CertPath:     path.Join(cfg.CryptoPath, "users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem"),
 		KeyPath:      kp,
 	}
 

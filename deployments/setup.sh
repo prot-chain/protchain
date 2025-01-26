@@ -24,7 +24,7 @@ $FABRIC_SCRIPT d
 # Step 2: Set up the test network
 echo "Setting up Fabric Test Network..."
 $NETWORK_SCRIPT down
-$NETWORK_SCRIPT up createChannel -ca
+$NETWORK_SCRIPT up createChannel
 
 # Step 3: Start the chaincode container
 cd $NETWORK_DIR
