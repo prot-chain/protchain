@@ -20,7 +20,7 @@ func (a *API) RetrieveProteinDetail(req schema.GetProteinReq) (schema.Protein, e
 	// Check if the file already exists in the blockchain
 	bcRes, err := a.Deps.FabricClient.EvaluateTransaction("QueryMetadata", req.Code)
 	if err != nil {
-		return schema.Protein{}, fmt.Errorf("failed to retrieve PDB file from %s: %w", res.Data.PDBLink, err)
+		return schema.Protein{}, fmt.Errorf("failed to check chain for protein %s: %w", req.Code, err)
 	}
 
 	var payload schema.Protein
@@ -67,10 +67,12 @@ func (a *API) RetrieveProteinDetail(req schema.GetProteinReq) (schema.Protein, e
 	}
 
 	// retrieve file from IPFS
+	fmt.Println("Downloading file from IPFS")
 	rc, err := a.Deps.IPFS.Download(payload.IPFSCid)
 	if err != nil {
 		return schema.Protein{}, errors.Wrap(err, "Failed to retrieve content from IPFS")
 	}
+	fmt.Println("IPFS file downloaded")
 	payload.File = rc
 
 	return payload, nil

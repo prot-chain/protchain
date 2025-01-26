@@ -30,19 +30,7 @@ $NETWORK_SCRIPT up createChannel -ca
 cd $NETWORK_DIR
 ./network.sh deployCC -ccn proteomic -ccp ../../../blockchain/chaincode/proteomic -ccl go
 
-# Step 4: Set up IPFS with Kubo
-if [ ! "$(docker ps -q -f name=$IPFS_CONTAINER_NAME)" ]; then
-  echo "Setting up IPFS Kubo..."
-  docker run -d --name $IPFS_CONTAINER_NAME \
-    -v kubo_staging:/export \
-    -v kubo_data:/data/ipfs \
-    -p 4001:4001 -p 5001:5001 -p 8080:8080 \
-    ipfs/kubo:latest daemon --init
-else
-  echo "IPFS Kubo container already running."
-fi
-
-# Step 5: Run Microservices with Docker Compose
+# Step 4: Run Microservices and IPFS with Docker Compose
 cd ../..
 if [ -f "./docker-compose.yml" ]; then
   docker-compose pull && docker-compose up -d

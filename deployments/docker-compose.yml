@@ -6,7 +6,7 @@ services:
     image: isongjosiah/protchain:bioapi
     container_name: bioapi
     ports:
-      - "8000:8000"
+      - "80:80"
     environment:
       - BIOAPI_ENV=local
     networks:
@@ -17,15 +17,28 @@ services:
     image: isongjosiah/protchain:protchain-api
     container_name: protchain-api
     ports:
-      - "8001:8001"
+      - "8002:8002"
     environment:
       - API_ENV=local
-      - BLOCKCHAIN_URL=grpc://peer0.org1.example.com:7051
-      - BIOAPI_URL=http://bioapi:8000
+      - BLOCKCHAIN_URL=peer0.org1.example.com:7051
+      - DATABASE_URL=postgres://postgres:mysecretpassword@postgresql:5432/protchain?sslmode=disable
+      - BIO_API_URL=http://bioapi:80/api/v1
+      - IPFS_ADDRESS=/dns/ipfs/tcp/5001
+      - JWT_KEY=test
+      - CHANNEL=mychannel
+      - CHAIN_CODE=proteomic
+      - PEER_ENDPOINT=peer0.org1.example.com:7051
+      - MSPID=Org1MSP
+      - CRYPTO_PATH=/crypto/org1
+      - HTTP_PORT=8002
+    volumes:
+      - ./fabric_setup/test-network/organizations/peerOrganizations/org1.example.com:/crypto/org1
     depends_on:
       - bioapi
+      - postgresql
     networks:
       - protchain-network
+      - fabric_test
 
   # PostgreSQL Service
   postgresql:
@@ -37,11 +50,29 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: mysecretpassword
       POSTGRES_DB: protchain
+    networks:
+      - protchain-network
+  # IPFS Kubo (go-ipfs)
+  ipfs:
+    image: ipfs/kubo:latest
+    container_name: ipfs
+    ports:
+      - "4001:4001" # Swarm port
+      - "5001:5001" # API port
+      - "8080:8080" # Gateway port
+    environment:
+      - IPFS_PROFILE=server
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ipfs_data:/data/ipfs
     networks:
       - protchain-network
 
 networks:
   protchain-network:
     driver: bridge
+  fabric_test:
+    external: true
+
+volumes:
+  ipfs_data:
+    driver: local
