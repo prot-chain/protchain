@@ -40,7 +40,7 @@ export CORE_PEER_ADDRESS=localhost:7051
 # Step 4: Run Microservices and IPFS with Docker Compose
 cd ../..
 if [ -f "./docker-compose.yml" ]; then
-  docker-compose down -d
+  docker-compose down
   docker-compose pull && docker-compose up -d
   echo "Microservices are running."
 else
